@@ -14,6 +14,19 @@ describe('instances', () => {
     expect(instance).toBeDefined();
   });
 
+  it('should make instance inherit from given prototype', () => {
+    let proto = {'something': 'asd'};
+
+    instances.set('some-id', proto);
+    let instance = instances.get('some-id');
+
+    expect(instance.something).toBe('asd');
+
+    instance.something = 'wasd';
+
+    expect(proto.something).toBe('asd');
+  });
+
   it('should allow calling a method from the prototype', () => {
     const someValue = 'something';
 

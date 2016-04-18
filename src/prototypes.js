@@ -1,27 +1,14 @@
 import extend from 'extend';
-import Caller from './caller';
+import Objects from './objects';
 
-class Prototypes {
-  constructor() {
-    this.prototypes = {};
-    this.caller = new Caller(this.prototypes);
-  }
-
+class Prototypes extends Objects {
   set(id, code, options) {
     options = options || {};
 
     let prototype = extend({}, options.data || {});
-    eval('(' + code + ')').bind(prototype)(options.world);
+    eval(`(${code})`).bind(prototype)(options.world);
 
-    this.prototypes[id] = prototype;
-  }
-
-  get(id) {
-    return this.prototypes[id];
-  }
-
-  call(id, method, params) {
-    return this.caller.call(id, method, params);
+    this.objects[id] = prototype;
   }
 }
 
