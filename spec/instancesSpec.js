@@ -40,4 +40,26 @@ describe('instances', () => {
     let result = instances.call('some-id', 'someMethod');
     expect(result).toBe(someValue);
   });
+
+  it('should make a deepy copy of data when merging into prototype object', () => {
+    let proto = {
+      alterValue() {
+        this.obj.someNestedValue = 2;
+      }
+    };
+
+    let data = {
+      obj: {
+        someNestedValue: 1
+      }
+    };
+
+    instances.set('some-id', proto, data);
+    let instance = instances.get('some-id');
+
+    instances.call('some-id', 'alterValue');
+
+    expect(instance.obj.someNestedValue).toBe(2);
+    expect(data.obj.someNestedValue).toBe(1);
+  });
 });

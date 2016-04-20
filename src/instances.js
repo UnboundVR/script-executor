@@ -6,7 +6,7 @@ class Instances extends Objects {
     class Instance {};
     Instance.prototype = prototype;
 
-    let instance = extend(new Instance(), data);
+    let instance = extend(true, new Instance(), data);
 
     this.objects[id] = instance;
   }

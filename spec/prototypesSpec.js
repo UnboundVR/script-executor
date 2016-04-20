@@ -32,12 +32,17 @@ describe('prototypes', () => {
     prototypes.set('some-id', 'function(world) {world.done();}', {world});
   });
 
-  it('should merge data into prototype object', (done) => {
+  it('should make a deepy copy of data when merging into prototype object', () => {
     let data = {
-      done
+      obj: {
+        someNestedValue: 1
+      }
     };
 
-    prototypes.set('some-id', 'function() {this.done()}', {data});
+    prototypes.set('some-id', 'function() {this.obj.someNestedValue = 2;}', {data});
+    let proto = prototypes.get('some-id');
+    expect(proto.obj.someNestedValue).toBe(2);
+    expect(data.obj.someNestedValue).toBe(1);
   });
 
   it('should allow us to call public methods defined in the user code', () => {
