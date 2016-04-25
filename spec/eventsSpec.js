@@ -4,10 +4,6 @@ import sinon from 'sinon';
 import jasmineSinon from 'jasmine-sinon';
 const EventEmitter = require('events');
 
-let isFunction = function(obj) {
-  return typeof obj == 'function' || false;
-};
-
 class ObjectsStub extends Objects {
   constructor(objs) {
     super();
@@ -18,6 +14,10 @@ class ObjectsStub extends Objects {
   }
 }
 
+let deletedObject = {
+  onSomething: sinon.stub()
+};
+
 let objs;
 let emitter;
 let objects;
@@ -27,20 +27,24 @@ let events;
 beforeEach(() => {
   objs = {
     'some-id': {
-      onSomething: sinon.stub()
+      onSomething: sinon.stub(),
+      shouldCall: true
     },
     'some-other-id': {
       onSomething: sinon.stub(),
       onNotMonitored: sinon.stub()
     },
-    'yet-another-id': {}
+    'yet-another-id': {},
+    'deleted-id': deletedObject,
   };
 
   monitoredEvents = ['Something'];
   emitter = new EventEmitter();
   objects = new ObjectsStub(objs);
-  events = new Events(emitter, monitoredEvents, objects);
-  events.wire();
+  events = new Events(objects);
+  events.wire(emitter, monitoredEvents);
+
+  objects.remove('deleted-id');
 });
 
 describe('events', () => {
@@ -52,16 +56,25 @@ describe('events', () => {
     expect(objs['some-other-id'].onSomething).toHaveBeenCalledWith(payload);
   });
 
-  it('should call method only in matching object if id filter passed', () => {
-    emitter.emit('Something', {}, {id: 'some-id'});
+  it('should call method only in matching object if ID filter passed', () => {
+    emitter.emit('Something', {}, (obj, id) => id == 'some-id');
+    expect(objs['some-id'].onSomething).toHaveBeenCalled();
+    expect(objs['some-other-id'].onSomething).not.toHaveBeenCalled();
+  });
+
+  it('should call method only in matching object if obj filter passed', () => {
+    emitter.emit('Something', {}, (obj, id) => obj.shouldCall);
     expect(objs['some-id'].onSomething).toHaveBeenCalled();
     expect(objs['some-other-id'].onSomething).not.toHaveBeenCalled();
   });
 
   it('should ignore non-monitored events', () => {
-    let payload = 'asdasd';
-
     emitter.emit('NotMonitored');
     expect(objs['some-other-id'].onNotMonitored).not.toHaveBeenCalled();
+  });
+
+  it('should ignore handlers from deleted objects', () => {
+    emitter.emit('Something');
+    expect(deletedObject.onSomething).not.toHaveBeenCalled();
   });
 });

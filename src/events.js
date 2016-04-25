@@ -1,22 +1,22 @@
 export default class Events {
-  constructor(emitter, monitoredEvents, objects) {
-    this.emitter = emitter;
-    this.monitoredEvents = monitoredEvents;
+  constructor(objects) {
     this.objects = objects;
   }
 
-  wire() {
-    for(let e of this.monitoredEvents) {
-      let self = this;
-      this.emitter.on(e, (payload, filter) => {
-        filter = filter || {};
-        for(let id of self.objects.getAllIds()) {
-          if(!filter.id || filter.id == id) {
-            let method = `on${e}`;
-            self.objects.hasMethod(id, method) && self.objects.call(id, method, payload);
-          }
+  _invokeHandler(e, objId, payload) {
+    let method = `on${e}`;
+    this.objects.hasMethod(objId, method) && this.objects.call(objId, method, payload);
+  }
+
+  wire(emitter, monitoredEvents) {
+    for(let e of monitoredEvents) {
+      emitter.on(e, ((payload, filter) => {
+        filter = filter || ((obj, id) => true);
+        for(let id of this.objects.getAllIds()) {
+          let obj = this.objects.get(id);
+          filter(obj, id) && this._invokeHandler(e, id, payload);
         }
-      });
+      }).bind(this));
     }
   }
 }

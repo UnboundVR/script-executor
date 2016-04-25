@@ -9,19 +9,19 @@ describe('prototypes', () => {
 
   it('should throw and not store anything if code has syntax errors', () => {
     expect(() => prototypes.set('some-id', 'function() {var a = !?!?}')).toThrow();
-    expect(prototypes.get('some-id')).not.toBeDefined();
+    expect(prototypes.get('some-id')).toBeFalsy();
   });
 
   it('should throw and not store anything if code does not declare a function', () => {
     expect(() => prototypes.set('some-id', 'var a = 3;')).toThrow();
-    expect(prototypes.get('some-id')).not.toBeDefined();
+    expect(prototypes.get('some-id')).toBeFalsy();
   });
 
   it('should store and retrieve prototypes by ID', () => {
     prototypes.set('some-id', 'function() {}');
     let prototype = prototypes.get('some-id');
 
-    expect(prototype).toBeDefined();
+    expect(prototype).toBeTruthy();
   });
 
   it('should make world accessible from user generated code', (done) => {
@@ -50,6 +50,15 @@ describe('prototypes', () => {
     let result = prototypes.call('some-id', 'getStuff');
 
     expect(result).toBe('some-val');
+  });
+
+  describe('remove', () => {
+    it('should remove the prototype', () => {
+      prototypes.set('some-id', 'function(){}');
+      expect(prototypes.get('some-id')).toBeTruthy();
+      prototypes.remove('some-id');
+      expect(prototypes.get('some-id')).toBeFalsy();
+    });
   });
 
   // it('should have access to global scope when options.global set to true', () => {

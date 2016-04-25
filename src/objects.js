@@ -10,6 +10,10 @@ export default class Objects {
     return this.objects[id];
   }
 
+  remove(id) {
+    delete this.objects[id];
+  }
+
   hasMethod(id, method) {
     return !!this.objects[id][method];
   }
