@@ -51,4 +51,18 @@ describe('prototypes', () => {
 
     expect(result).toBe('some-val');
   });
+
+  // it('should have access to global scope when options.global set to true', () => {
+  //   window.someValue = 1;
+  //   prototypes.set('some-id', 'function() {window.someValue = 2;}', {global: true});
+  //
+  //   expect(window.someValue).toBe(2);
+  // });
+  //
+  // it('should not have access to global scope when options.global set to false', () => {
+  //   window.someValue = 1;
+  //   prototypes.set('some-id', 'function() {window.someValue = 2;}', {global: false});
+  //
+  //   expect(window.someValue).toBe(1);
+  // });
 });
