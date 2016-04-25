@@ -80,7 +80,7 @@ events.wire(emitter, ['SomeEvent', 'SomeOtherEvent']);
 
 This way, whenever a `SomeEvent` or `SomeOtherEvent` is fired on that `EventEmitter`, all instances which have an `onSomeEvent` or `onSomeOtherEvent` method will have that method called.
 
-For convenience, there is a `wireEvents` method available in the default export, created for the `instances` reference, which can be used like this:
+For convenience, there is a `wireEvents` method available in the default export, created for the default `instances` property, which can be used like this:
 
 ```
 import executor from 'script-executor';
