@@ -13,3 +13,7 @@ export default {
     events.wire(emitter, monitoredEvents);
   }
 };
+
+export {Prototypes as Prototypes};
+export {Instances as Instances};
+export {Events as Events};
