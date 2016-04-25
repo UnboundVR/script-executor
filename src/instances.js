@@ -1,7 +1,7 @@
 import extend from 'extend';
 import Objects from './objects';
 
-class Instances extends Objects {
+export default class Instances extends Objects {
   set(id, prototype, data) {
     class Instance {};
     Instance.prototype = prototype;
@@ -11,5 +11,3 @@ class Instances extends Objects {
     this.objects[id] = instance;
   }
 }
-
-export default Instances;

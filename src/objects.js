@@ -1,6 +1,6 @@
 import Caller from './caller';
 
-class Objects {
+export default class Objects {
   constructor() {
     this.objects = {};
     this.caller = new Caller(this.objects);
@@ -22,5 +22,3 @@ class Objects {
     return this.caller.call(id, method, params);
   }
 }
-
-export default Objects;

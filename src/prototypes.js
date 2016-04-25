@@ -1,7 +1,7 @@
 import extend from 'extend';
 import Objects from './objects';
 
-class Prototypes extends Objects {
+export default class Prototypes extends Objects {
   set(id, code, options) {
     options = options || {};
 
@@ -11,5 +11,3 @@ class Prototypes extends Objects {
     this.objects[id] = prototype;
   }
 }
-
-export default Prototypes;

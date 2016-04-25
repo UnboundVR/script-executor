@@ -1,4 +1,4 @@
-class Events {
+export default class Events {
   constructor(emitter, monitoredEvents, objects) {
     this.emitter = emitter;
     this.monitoredEvents = monitoredEvents;
@@ -20,5 +20,3 @@ class Events {
     }
   }
 }
-
-export default Events;

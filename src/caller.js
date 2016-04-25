@@ -1,4 +1,4 @@
-class Caller {
+export default class Caller {
   constructor(objects) {
     this.objects = objects;
   }
@@ -7,5 +7,3 @@ class Caller {
     return this.objects[id][method](params);
   }
 }
-
-export default Caller;
