@@ -2,12 +2,12 @@
 Utility to allow execution of user-provided code.
 
 ## Usage
-This utility is comprised by three key classes (each of them `import`able):
-- **Prototypes**: Allows to create objects and passing some code as a string to augment their properties.
+This utility is comprised of three classes (each of them `import`able):
+- **Prototypes**: Allows to create objects by passing some code as a string that augments their properties.
 - **Instances**: Allows to define objects with arbitrary properties that 'inherit' from a prototype.
 - **Events**: Wires events from an event emitter to handlers defined on an instance/prototype.
 
-For convenience, the default export of this module contains singleton `instances` and `prototypes` references.
+For convenience, the default export of this module contains an `instances` and `prototypes` properties, which contain a singleton instance of the corresponding objects.
 
 ### Creating a prototype
 To create a prototype, just do:
