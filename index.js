@@ -1,19 +1,17 @@
-import Prototypes from './src/prototypes';
+import Block from './src/block';
 import Instances from './src/instances';
 import Events from './src/events';
 
-let prototypes = new Prototypes();
 let instances = new Instances();
 
 export default {
-  prototypes,
   instances,
   wireEvents(emitter, monitoredEvents) {
-    let events = new Events(instances);
-    events.wire(emitter, monitoredEvents);
+    let events = new Events(instances, emitter, monitoredEvents);
+    events.wire();
   }
 };
 
-export {Prototypes as Prototypes};
+export {Block as Block};
 export {Instances as Instances};
 export {Events as Events};
