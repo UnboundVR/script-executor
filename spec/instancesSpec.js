@@ -1,76 +1,111 @@
 import Instances from '../src/instances';
 
-describe('instances', () => {
-  let instances;
+let instances;
 
-  beforeEach(() => {
-    instances = new Instances();
+beforeEach(() => {
+  instances = new Instances();
+});
+
+describe('instances', () => {
+  describe('getAllIds', () => {
+    it('should return all IDs', () => {
+      class Stuff {}
+      class Stuff2 {}
+
+      instances.create('some-id', Stuff);
+      instances.create('some-other-id', Stuff2);
+
+      let allIDs = instances.getAllIDs();
+
+      expect(allIDs.indexOf('some-id') != -1).toBeTruthy();
+      expect(allIDs.indexOf('some-other-id') != -1).toBeTruthy();
+      expect(allIDs.length).toBe(2);
+    });
   });
 
-  describe('set', () => {
-    it('should store and retrieve instances by ID', () => {
-      instances.set('some-id', {});
-      let instance = instances.get('some-id');
+  describe('create', () => {
+    it('should create an instance of the class given and store it by id', () => {
+      const SOME_VALUE = 'someValue';
 
-      expect(instance).toBeDefined();
-    });
-
-    it('should make instance inherit from given prototype', () => {
-      let proto = {'something': 'asd'};
-
-      instances.set('some-id', proto);
-      let instance = instances.get('some-id');
-
-      expect(instance.something).toBe('asd');
-
-      instance.something = 'wasd';
-
-      expect(proto.something).toBe('asd');
-    });
-
-    it('should allow calling a method from the prototype', () => {
-      const someValue = 'something';
-
-      let prototype = {
-        someMethod() {
-          return someValue;
+      class Stuff {
+        constructor() {
+          this.someProp = SOME_VALUE;
         }
-      };
+      }
 
-      instances.set('some-id', prototype);
-      let result = instances.call('some-id', 'someMethod');
-      expect(result).toBe(someValue);
+      instances.create('some-id', Stuff);
+
+      let instance = instances.get('some-id');
+
+      expect(instance.someProp).toBe(SOME_VALUE);
     });
 
-    it('should make a deepy copy of data when merging into prototype object', () => {
-      let proto = {
-        alterValue() {
-          this.obj.someNestedValue = 2;
+    it('should merge world and instance-specific data', (done) => {
+      const SOME_VALUE = 'someValue';
+
+      let world = {
+        someMethod(param) {
+          expect(param).toBe(SOME_VALUE);
+          done();
         }
       };
 
       let data = {
-        obj: {
-          someNestedValue: 1
-        }
+        someValue: SOME_VALUE
       };
 
-      instances.set('some-id', proto, data);
+      class Stuff {
+        constructor(world, data) {
+          this.world = world;
+          this.data = data;
+        }
+
+        test() {
+          this.world.someMethod(this.data.someValue);
+        }
+      }
+
+      instances.create('some-id', Stuff, {world, data});
+
       let instance = instances.get('some-id');
 
-      instances.call('some-id', 'alterValue');
-
-      expect(instance.obj.someNestedValue).toBe(2);
-      expect(data.obj.someNestedValue).toBe(1);
+      instance.test();
     });
-  });
 
-  describe('remove', () => {
-    it('should remove the instance', () => {
-      instances.set('some-id', {});
-      expect(instances.get('some-id')).toBeTruthy();
-      instances.remove('some-id');
-      expect(instances.get('some-id')).toBeFalsy();
+    it('should make a deep copy of world when merging', (done) => {
+      const SOME_VALUE = 'someValue';
+
+      let world = {
+        test: done
+      };
+
+      class Stuff {
+        constructor(world) {
+          world.test = function() {
+            throw new Error('Hacked you!');
+          }
+        }
+      }
+
+      instances.create('some-id', Stuff, {world});
+      world.test();
+    });
+
+    it('should make a deep copy of data when merging', () => {
+      const SOME_VALUE = 'someValue';
+
+      let data = {
+        someImportantValue: SOME_VALUE
+      };
+
+      class Stuff {
+        constructor(world, data) {
+          data.someImportantValue = 'notWhatWeExpect';
+        }
+      }
+
+      instances.create('some-id', Stuff, {data});
+      expect(data.someImportantValue).toBe(SOME_VALUE);
     });
   });
 });

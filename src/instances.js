@@ -1,13 +1,24 @@
 import extend from 'extend';
-import Objects from './objects';
 
-export default class Instances extends Objects {
-  set(id, prototype, data) {
-    class Instance {};
-    Instance.prototype = prototype;
+export default class Instances {
+  constructor() {
+    this.instances = {};
+  }
 
-    let instance = extend(true, new Instance(), data);
+  create(id, $class, options) {
+    options = options || {};
 
-    this.objects[id] = instance;
+    let world = extend(true, {}, options.world);
+    let data = extend(true, {}, options.data);
+
+    this.instances[id] = new $class(world, data);
+  }
+
+  get(id) {
+    return this.instances[id];
+  }
+
+  getAllIDs() {
+    return Object.keys(this.instances);
   }
 }
