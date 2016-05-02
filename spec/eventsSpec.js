@@ -87,5 +87,20 @@ describe('events', () => {
       expect(goodHandler).toHaveBeenCalled();
       expect(badHandler).not.toHaveBeenCalled();
     });
+
+    it('should return false in filters if they throw exception', () => {
+      let handler = sinon.spy();
+
+      instances.create('some-id', {
+        onSomeEvent: handler
+      });
+
+      events.wire();
+      emitter.emit('someEvent', {}, () => {
+        throw new Error('Exception in filter');
+      });
+
+      expect(handler).not.toHaveBeenCalled();
+    });
   });
 });

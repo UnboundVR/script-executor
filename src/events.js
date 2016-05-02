@@ -24,7 +24,17 @@ export default class Events {
         filter = filter || (() => true);
         for(let id of this.instances.getAllIDs()) {
           let instance = this.instances.get(id);
-          filter(instance) && this._invokeHandler(instance, eventName, payload);
+
+          let shouldExecute = false;
+          try {
+            shouldExecute = filter(instance);
+          } catch (e) {
+            console.log(`Exception in filter, probably something wrong with ${id}`);
+          }
+
+          if(shouldExecute) {
+            this._invokeHandler(instance, eventName, payload);
+          }
         }
       });
     }
