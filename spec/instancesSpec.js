@@ -23,6 +23,10 @@ describe('instances', () => {
       expect(instances.get('some-id')).toBeFalsy();
       expect(instances.get('some-other-id')).toBeTruthy();
     });
+
+    it('should do nothing if the instance does not exist', () => {
+      instances.remove('whatever'); // no exception
+    });
   });
 
   describe('getAllIds', () => {
