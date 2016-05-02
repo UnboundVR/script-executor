@@ -5,7 +5,8 @@ import Events from './src/events';
 let instances = new Instances();
 
 export default {
-  instances,
+  createInstance: instances.create.bind(instances),
+  getInstance: instances.get.bind(instances),
   wireEvents(emitter, monitoredEvents) {
     let events = new Events(instances, emitter, monitoredEvents);
     events.wire();
