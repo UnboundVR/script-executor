@@ -8,14 +8,27 @@ export default class Instances {
   create(id, $class, options) {
     options = options || {};
 
-    let world = extend(true, {}, options.world);
-    let data = extend(true, {}, options.data);
+    let api = extend(true, {}, options.api);
+    let metadata = extend(true, {}, options.metadata);
 
-    this.instances[id] = new $class(world, data);
+    let instance = new $class(api, metadata);
+
+    this.instances[id] = {
+      instance,
+      metadata
+    };
+  }
+
+  _exists(id) {
+    return !! this.instances[id];
   }
 
   get(id) {
-    return this.instances[id];
+    return this._exists(id) && this.instances[id].instance;
+  }
+
+  getMetadata(id) {
+    return this._exists(id) && this.instances[id].metadata;
   }
 
   remove(id) {

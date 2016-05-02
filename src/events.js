@@ -23,16 +23,17 @@ export default class Events {
       this.emitter.on(eventName, (payload, filter) => {
         filter = filter || (() => true);
         for(let id of this.instances.getAllIDs()) {
-          let instance = this.instances.get(id);
+          let metadata = this.instances.getMetadata(id);
 
           let shouldExecute = false;
           try {
-            shouldExecute = filter(instance);
+            shouldExecute = filter(metadata);
           } catch (e) {
             console.log(`Exception in filter, probably something wrong with ${id}`);
           }
 
           if(shouldExecute) {
+            let instance = this.instances.get(id);
             this._invokeHandler(instance, eventName, payload);
           }
         }

@@ -25,6 +25,10 @@ class InstancesStub {
   get(id) {
     return this.instances[id];
   }
+
+  getMetadata(id) {
+    return this.get(id).metadata;
+  }
 }
 
 beforeEach(() => {
@@ -65,7 +69,7 @@ describe('events', () => {
       emitter.emit('someEvent', payload);
     });
 
-    it('should use the second parameter as a filter function', () => {
+    it('should apply the filter function to the metadata', () => {
       const THIS_ONE = 'thisOne';
 
       let goodHandler = sinon.spy();
@@ -73,16 +77,20 @@ describe('events', () => {
 
       instances.create('some-id', {
         onSomeEvent: goodHandler,
-        someAttribute: THIS_ONE
+        metadata: {
+          someAttribute: THIS_ONE
+        }
       });
 
       instances.create('some-other-id', {
         onSomeEvent: badHandler,
-        someAttribute: 'notThisOne'
+        metadata: {
+          someAttribute: 'notThisOne'
+        }
       });
 
       events.wire();
-      emitter.emit('someEvent', {}, obj => obj.someAttribute == THIS_ONE);
+      emitter.emit('someEvent', {}, metadata => metadata.someAttribute == THIS_ONE);
 
       expect(goodHandler).toHaveBeenCalled();
       expect(badHandler).not.toHaveBeenCalled();

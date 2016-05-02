@@ -62,72 +62,93 @@ describe('instances', () => {
       expect(instance.someProp).toBe(SOME_VALUE);
     });
 
-    it('should merge world and instance-specific data', (done) => {
+    it('should pass api and instance-specific metadata', (done) => {
       const SOME_VALUE = 'someValue';
 
-      let world = {
+      let api = {
         someMethod(param) {
           expect(param).toBe(SOME_VALUE);
           done();
         }
       };
 
-      let data = {
+      let metadata = {
         someValue: SOME_VALUE
       };
 
       class Stuff {
-        constructor(world, data) {
-          this.world = world;
-          this.data = data;
+        constructor(api, metadata) {
+          this.api = api;
+          this.metadata = metadata;
         }
 
         test() {
-          this.world.someMethod(this.data.someValue);
+          this.api.someMethod(this.metadata.someValue);
         }
       }
 
-      instances.create('some-id', Stuff, {world, data});
+      instances.create('some-id', Stuff, {api, metadata});
 
       let instance = instances.get('some-id');
 
       instance.test();
     });
 
-    it('should make a deep copy of world when merging', (done) => {
+    it('should store metadata as the same object passed to the class', () => {
+      let metadata = {
+        something: 'something'
+      };
+
+      class Stuff {
+        constructor(api, metadata) {
+          this.metadata = metadata;
+        }
+      }
+
+      instances.create('some-id', Stuff, {metadata});
+
+      let instance = instances.get('some-id');
+      let instanceMetadata = instances.getMetadata('some-id');
+
+      instanceMetadata.something = 'something-else';
+
+      expect(instanceMetadata.something).toBe(instance.metadata.something);
+    });
+
+    it('should make a deep copy of api when merging', (done) => {
       const SOME_VALUE = 'someValue';
 
-      let world = {
+      let api = {
         test: done
       };
 
       class Stuff {
-        constructor(world) {
-          world.test = function() {
+        constructor(api) {
+          api.test = function() {
             throw new Error('Hacked you!');
           }
         }
       }
 
-      instances.create('some-id', Stuff, {world});
-      world.test();
+      instances.create('some-id', Stuff, {api});
+      api.test();
     });
 
-    it('should make a deep copy of data when merging', () => {
+    it('should make a deep copy of metadata when merging', () => {
       const SOME_VALUE = 'someValue';
 
-      let data = {
+      let metadata = {
         someImportantValue: SOME_VALUE
       };
 
       class Stuff {
-        constructor(world, data) {
-          data.someImportantValue = 'notWhatWeExpect';
+        constructor(api, metadata) {
+          metadata.someImportantValue = 'notWhatWeExpect';
         }
       }
 
-      instances.create('some-id', Stuff, {data});
-      expect(data.someImportantValue).toBe(SOME_VALUE);
+      instances.create('some-id', Stuff, {metadata});
+      expect(metadata.someImportantValue).toBe(SOME_VALUE);
     });
   });
 });
