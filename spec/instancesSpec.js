@@ -94,7 +94,7 @@ describe('instances', () => {
       instance.test();
     });
 
-    it('should store metadata as the same object passed to the class', () => {
+    it('should store metadata as the same object passed to the class but unalterable', () => {
       let metadata = {
         something: 'something'
       };
@@ -103,16 +103,20 @@ describe('instances', () => {
         constructor(api, metadata) {
           this.metadata = metadata;
         }
+
+        modifyStuff() {
+          this.metadata.something = 'something-else';
+        }
       }
 
       instances.create('some-id', Stuff, {metadata});
-
       let instance = instances.get('some-id');
+      instance.modifyStuff();
+
       let instanceMetadata = instances.getMetadata('some-id');
 
-      instanceMetadata.something = 'something-else';
-
-      expect(instanceMetadata.something).toBe(instance.metadata.something);
+      expect(instanceMetadata.something).toBe('something');
+      expect(instance.metadata.something).toBe('something-else');
     });
 
     it('should make a deep copy of api when merging', (done) => {

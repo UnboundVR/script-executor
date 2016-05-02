@@ -15,7 +15,7 @@ export default class Instances {
 
     this.instances[id] = {
       instance,
-      metadata
+      metadata: options.metadata // store unaltered original
     };
   }
 
