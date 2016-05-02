@@ -7,6 +7,24 @@ beforeEach(() => {
 });
 
 describe('instances', () => {
+  describe('remove', () => {
+    it('should remove instance', () => {
+      class Stuff {}
+      class Stuff2 {}
+
+      instances.create('some-id', Stuff);
+      instances.create('some-other-id', Stuff2);
+
+      expect(instances.get('some-id')).toBeTruthy();
+      expect(instances.get('some-other-id')).toBeTruthy();
+
+      instances.remove('some-id');
+
+      expect(instances.get('some-id')).toBeFalsy();
+      expect(instances.get('some-other-id')).toBeTruthy();
+    });
+  });
+
   describe('getAllIds', () => {
     it('should return all IDs', () => {
       class Stuff {}

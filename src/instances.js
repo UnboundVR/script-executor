@@ -18,6 +18,10 @@ export default class Instances {
     return this.instances[id];
   }
 
+  remove(id) {
+    delete this.instances[id];
+  }
+
   getAllIDs() {
     return Object.keys(this.instances);
   }
