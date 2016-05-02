@@ -1,4 +1,3 @@
-import Block from './src/block';
 import Instances from './src/instances';
 import Events from './src/events';
 
@@ -14,6 +13,5 @@ export default {
   }
 };
 
-export {Block as Block};
 export {Instances as Instances};
 export {Events as Events};
