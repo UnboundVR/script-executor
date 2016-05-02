@@ -27,7 +27,7 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
-    "extend": "^3.0.0"
+    "clone": "^1.0.2"
   },
   "browserify": {
     "transform": [

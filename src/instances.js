@@ -1,4 +1,4 @@
-import extend from 'extend';
+import clone from 'clone';
 
 export default class Instances {
   constructor() {
@@ -8,8 +8,8 @@ export default class Instances {
   create(id, $class, options) {
     options = options || {};
 
-    let api = extend(true, {}, options.api);
-    let metadata = extend(true, {}, options.metadata);
+    let api = clone(options.api);
+    let metadata = clone(options.metadata);
 
     let instance = new $class(api, metadata);
 
