@@ -29,7 +29,7 @@ export default class Events {
           try {
             shouldExecute = filter(metadata);
           } catch (e) {
-            console.log(`Exception in filter, probably something wrong with ${id}`);
+            console.log(`Exception in filter, probably something wrong with ${id}`, e);
           }
 
           if(shouldExecute) {
