@@ -19,7 +19,13 @@ export default {
   },
   getInstance: instances.get.bind(instances),
   removeInstance: instances.remove.bind(instances),
-  loadClass: classes.load.bind(classes),
+  loadClass(id, code) {
+    if(!classes) {
+      throw new Error('Class loader is not set');
+    }
+
+    return classes.load(id, code);
+  }
   wireEvents(emitter, monitoredEvents) {
     let events = new Events(instances, emitter, monitoredEvents);
     events.wire();
