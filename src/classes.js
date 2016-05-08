@@ -8,7 +8,7 @@ export default class Classes {
     let ctor = await this._load(code);
 
     if(typeof ctor != 'function') {
-      throw new Error('Code must be a function');
+      throw new Error('Code must declare a constructor - therefore it must be a function');
     }
 
     this.classes[id] = ctor;
