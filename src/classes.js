@@ -1,6 +1,6 @@
 export default class Classes {
-  constructor(load) {
-    this._load = load;
+  constructor(loader) {
+    this._load = loader;
     this.classes = {};
   }
 

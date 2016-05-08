@@ -1,13 +1,19 @@
 import Instances from './src/instances';
 import Events from './src/events';
 import Classes from './src/classes';
-import loadClass from './src/classes/loadClass';
 
 let instances = new Instances();
-let classes = new Classes(loadClass);
+let classes;
 
 export default {
+  setClassLoader(loader) {
+    classes = new Classes(loader);
+  },
   async createInstance(id, ctorId, options) {
+    if(!classes) {
+      throw new Error('Class loader is not set');
+    }
+
     let ctor = classes.get(ctorId);
     instances.create(id, ctor, options);
   },
