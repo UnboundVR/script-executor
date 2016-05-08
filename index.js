@@ -25,7 +25,7 @@ export default {
     }
 
     return classes.load(id, code);
-  }
+  },
   wireEvents(emitter, monitoredEvents) {
     let events = new Events(instances, emitter, monitoredEvents);
     events.wire();
