@@ -1,31 +1,22 @@
 import Instances from './src/instances';
 import Events from './src/events';
 import Classes from './src/classes';
+import classLoader from './src/classLoader';
 
 let instances = new Instances();
-let classes;
+let classes = new Classes(classLoader);
 
 export default {
   setClassLoader(loader) {
     classes = new Classes(loader);
   },
   async createInstance(id, ctorId, options) {
-    if(!classes) {
-      throw new Error('Class loader is not set');
-    }
-
     let ctor = classes.get(ctorId);
     instances.create(id, ctor, options);
   },
   getInstance: instances.get.bind(instances),
   removeInstance: instances.remove.bind(instances),
-  loadClass(id, code) {
-    if(!classes) {
-      throw new Error('Class loader is not set');
-    }
-
-    return classes.load(id, code);
-  },
+  loadClass: classes.load.bind(classes),
   wireEvents(emitter, monitoredEvents) {
     let events = new Events(instances, emitter, monitoredEvents);
     events.wire();
