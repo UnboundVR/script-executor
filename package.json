@@ -27,7 +27,8 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
-    "clone": "^1.0.2"
+    "clone": "^1.0.2",
+    "promise-queue": "^2.2.3"
   },
   "browserify": {
     "transform": [
