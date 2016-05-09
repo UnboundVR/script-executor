@@ -15,7 +15,7 @@ export default class Events {
 
     let method = instance[methodName];
 
-    method && method(payload);
+    method && method.bind(instance)(payload);
   }
 
   wire() {

@@ -51,6 +51,21 @@ describe('events', () => {
       emitter.emit('someEvent');
     });
 
+    it('should invoke handler bound to the corresponding instance', (done) => {
+      let instance = {
+        prop: 'value',
+        onSomeEvent() {
+          expect(this.prop).toBe('value');
+          done();
+        }
+      };
+
+      instances.create('some-id', instance);
+      events.wire();
+
+      emitter.emit('someEvent');
+    });
+
     it('should pass the first event parameter as payload', (done) => {
       instances.create('some-id', {
         onSomeEvent(payload) {
