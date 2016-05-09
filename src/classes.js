@@ -1,10 +1,8 @@
-import Queue from 'promise-queue';
-
 export default class Classes {
-  constructor(loader) {
+  constructor(loader, queue) {
     this._load = loader;
     this.classes = {};
-    this.queue = new Queue(1, Infinity);
+    this.queue = queue;
   }
 
   async load(id, code) {

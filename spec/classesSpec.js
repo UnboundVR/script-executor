@@ -1,7 +1,9 @@
 import Classes from '../src/classes';
 import sinon from 'sinon';
+import Queue from 'promise-queue';
 
 let mockLoader;
+let mockQueue;
 
 const id = 'someId';
 const otherId = 'someOtherId';
@@ -13,14 +15,19 @@ const promises = [];
 
 function setup(loadSuccess, resultIsFunc) {
   mockLoader = sinon.stub().withArgs(code).returns(loadSuccess ? Promise.resolve(resultIsFunc ? ctor : obj) : Promise.reject('some error'));
-  return new Classes(mockLoader);
+  mockQueue = {
+    add(f){
+      return f();
+    }
+  };
+  return new Classes(mockLoader, mockQueue);
 }
 
 function setupSequential() {
   mockLoader = (code) => new Promise((resolve, reject) => {
     promises.push({resolve, reject});
   });
-  return new Classes(mockLoader);
+  return new Classes(mockLoader, new Queue(1, Infinity));
 }
 
 describe('Classes', () => {
