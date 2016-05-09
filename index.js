@@ -3,26 +3,31 @@ import Events from './src/events';
 import Classes from './src/classes';
 import classLoader from './src/classLoader';
 
-let instances = new Instances();
-let classes = new Classes(classLoader);
+export default class ScriptExecutor {
+  constructor() {
+    this.instances = new Instances();
+    this.classes = new Classes(classLoader);
+  }
 
-export default {
-  setClassLoader(loader) {
-    classes = new Classes(loader);
-  },
-  async createInstance(id, ctorId, options) {
+  createInstance(id, ctorId, options) {
     let ctor = classes.get(ctorId);
     instances.create(id, ctor, options);
-  },
-  getInstance: instances.get.bind(instances),
-  removeInstance: instances.remove.bind(instances),
-  loadClass: classes.load.bind(classes),
+  }
+
+  getInstance(id) {
+    return instances.get(id);
+  }
+
+  removeInstance(id) {
+    instances.remove(id);
+  }
+
+  async loadClass(id, code) {
+    await classes.load(id, code);
+  }
+
   wireEvents(emitter, monitoredEvents) {
     let events = new Events(instances, emitter, monitoredEvents);
     events.wire();
   }
 };
-
-export {Instances as Instances};
-export {Events as Events};
-export {Classes as Classes};
