@@ -11,23 +11,23 @@ export default class ScriptExecutor {
 
   createInstance(id, ctorId, options) {
     let ctor = classes.get(ctorId);
-    instances.create(id, ctor, options);
+    this.instances.create(id, ctor, options);
   }
 
   getInstance(id) {
-    return instances.get(id);
+    return this.instances.get(id);
   }
 
   removeInstance(id) {
-    instances.remove(id);
+    this.instances.remove(id);
   }
 
   async loadClass(id, code) {
-    await classes.load(id, code);
+    await this.classes.load(id, code);
   }
 
   wireEvents(emitter, monitoredEvents) {
-    let events = new Events(instances, emitter, monitoredEvents);
+    let events = new Events(this.instances, emitter, monitoredEvents);
     events.wire();
   }
 };
