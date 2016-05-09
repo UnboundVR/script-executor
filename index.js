@@ -12,7 +12,7 @@ export default class ScriptExecutor {
   }
 
   createInstance(id, ctorId, options) {
-    let ctor = classes.get(ctorId);
+    let ctor = this.classes.get(ctorId);
     this.instances.create(id, ctor, options);
   }
 
